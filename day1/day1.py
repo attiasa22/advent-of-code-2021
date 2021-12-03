@@ -16,5 +16,6 @@ def increasing_measurements(sonar_readings_file):
 
 if __name__ == "__main__":
     print(increasing_measurements('day1/sonarreadings.txt'))
+    
 
 
