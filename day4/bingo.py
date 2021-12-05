@@ -6,22 +6,36 @@ def find_winning_bingo(games_and_drawings):
 
     boards, drawings = create_boards(games_and_drawings)
 
-    winning_board, drawn_number = get_winning_board( boards, drawings)
-
-    board_sum = np.sum(winning_board.astype(np.int))
-
-    return board_sum * drawn_number
+    winning_boards, drawn_numbers = get_winning_board( boards, drawings)
+    
+    # Part 1
+    board_sum_1 = np.sum(winning_boards[0].astype(np.int))
+    
+    # Part 2
+    board_sum_2 = np.sum(winning_boards[-1].astype(np.int))
+    
+    return board_sum_1 * drawn_numbers[0], board_sum_2 * drawn_numbers[-1]
 
 def get_winning_board(boards, drawings):
+    winning_boards = []
+    winning_drawings = []
+    
     while len(drawings):
         drawn_number = drawings.pop(0)
         for board in boards:
             location = np.where(board == str(drawn_number))
             if len(location[0]):
-                board[location[0][0]][location[1][0]] = 0
+                if check_columns(board) is None and check_rows(board) is None:
+                    board[location[0][0]][location[1][0]] = 0
 
-                if check_columns(board) is not None or check_rows(board) is not None:
-                    return board, drawn_number
+                if (check_columns(board) is not None or check_rows(board) is not None) and not next((True for elem in winning_boards if elem is board), False) :
+                    winning_boards.append(board)
+                    winning_drawings.append(drawn_number)
+                
+    print(np.shape(winning_boards))   
+    return winning_boards, winning_drawings
+                    
+                    
 
 def check_columns(board):
     for column in board:
@@ -54,7 +68,7 @@ def create_boards(games_and_drawings):
             else:
                 bingo_game = np.vstack([bingo_game , np.array(line.split())])
 
-    return bingo_games, drawings
+    return np.asarray(bingo_games), drawings
 
 if __name__ == "__main__":
     print(find_winning_bingo('day4/games.txt'))
