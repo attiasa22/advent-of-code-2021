@@ -33,9 +33,7 @@ def get_winning_board(boards, drawings):
                     winning_drawings.append(drawn_number)
                 
     print(np.shape(winning_boards))   
-    return winning_boards, winning_drawings
-                    
-                    
+    return winning_boards, winning_drawings               
 
 def check_columns(board):
     for column in board:
